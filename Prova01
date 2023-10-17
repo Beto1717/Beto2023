@@ -1,0 +1,128 @@
+public class ListaSimplesEncadeada<T extends Comparable<T>> extends Lista<T> {
+
+    private No<T> primeiro;
+    private int tamanho;
+
+    public ListaSimplesEncadeada(){
+        primeiro = null;
+        tamanho = 0;
+    }
+
+    @Override
+    public void incluir(T elemento) throws Exception {
+        No<T> novoNo = new No<>(elemento);
+        novoNo.setProximo(primeiro);
+        primeiro = novoNo;
+        tamanho++;
+    }
+
+    @Override
+    public T get(int posicao) throws Exception {
+        if (posicao < 0 || posicao >= tamanho) {
+            throw new Exception("Posição solicitada não existe na lista");
+        }
+
+        No<T> atual = primeiro;
+        for (int i = 0; i < posicao; i++) {
+            atual = atual.getProximo();
+        }
+
+        return atual.getElemento();
+    }
+
+    @Override
+    public int getPosElemento(T elemento) throws Exception {
+        No<T> atual = primeiro;
+        int i = 0;
+
+        while (atual != null) {
+            if (atual.getElemento().equals(elemento)) {
+                return i;
+            }
+
+            atual = atual.getProximo();
+            i++;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public void remover(int posicao) throws Exception {
+        if (posicao < 0 || posicao >= tamanho) {
+            throw new Exception("Posição solicitada não existe na lista");
+        }
+
+        if (posicao == 0) {
+            primeiro = primeiro.getProximo();
+        } else {
+            No<T> anterior = primeiro;
+            for (int i = 0; i < posicao - 1; i++) {
+                anterior = anterior.getProximo();
+            }
+
+            anterior.setProximo(anterior.getProximo().getProximo());
+        }
+
+        tamanho--;
+    }
+
+    @Override
+    public int getTamanho() {
+        return tamanho;
+    }
+
+    public void limpar() {
+        primeiro = null;
+        tamanho = 0;
+    }
+
+    @Override
+    public boolean contem(T elemento) throws Exception {
+        return getPosElemento(elemento) != -1;
+    }
+
+    @Override
+    public int compareTo(Lista<T> item) {
+        if (item == null) {
+            return 1;
+        }
+
+        if (tamanho != item.getTamanho()) {
+            return tamanho - item.getTamanho();
+        }
+
+        No<T> atual1 = primeiro;
+        No<T> atual2 = item.getPrimeiro();
+
+        while (atual1 != null && atual2 != null) {
+            if (atual1.getElemento().compareTo(atual2.getElemento()) != 0) {
+                return atual1.getElemento().compareTo(atual2.getElemento());
+            }
+
+            atual1 = atual1.getProximo();
+            atual2 = atual2.getProximo();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public T[] TransformarEmVetor() {
+        if (tamanho == 0) {
+            return new T[0];
+        }
+
+        // Cria um vetor para armazenar os elementos da lista
+        T[] vetor = (T[]) new Object[tamanho];
+
+        // Percorre a lista, adicionando os elementos ao vetor
+        No<T> atual = primeiro;
+        for (int i = 0; i < tamanho; i++) {
+            vetor[i] = atual.getElemento();
+            atual = atual.getProximo();
+        }
+
+        return vetor;
+    }
+}
